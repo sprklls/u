@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simp</title>
+  <style>
+     #cursor {
+        display:block;
+        position: fixed;
+        pointer-events: none; /* don't capture mouse events */
+        /* appear in screenshots */
+        
+    }
+
+    canvas {
+      display: block;
+      border: 1px solid black;
+      width: 500px;
+      height: 500px;
+    }
+
+    button {
+      padding: 10px 5px 10px 5px;
+    }
+   
+  </style>
+</head>
+<body>
+    <img src="dithered.png"  id="cursor" >
+
+
+    <div style="display: flex; ">
+        <div>
+            <canvas id="canvas" width="500" height="500"></canvas>
+        </div>
+
+
+        <div style="margin-left: 24px; display: flex; flex-direction: column; gap: 12px;">
+            <button id="btn-a">
+              <img src="dithered.png" width="35px">
+            </button>
+
+            <button id="btn-b">
+              <img src="dathered.png" width ="35px">
+            </button>
+
+            <button id="btn-c">
+              <img src="gat.png" width ="35px">
+            </button>
+
+            <button id="btn-d">
+              <img src="dith3.png" width="35px">
+            </button>
+
+            <button id="btn-e">
+              <img src="shower.jpg" width="70px" >
+            </button>
+
+            <button id="btn-f">
+              <img src="plastersicon.png" width="70px" >
+            </button>
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+  
+
+
+</body>
+</html>
