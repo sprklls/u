@@ -15,7 +15,6 @@
 
         
     }
-
     canvas {
       display: block;
       border: 1px solid black;
@@ -25,6 +24,27 @@
 
     button {
       padding: 10px 5px 10px 5px;
+    }
+
+    #button-wrap button {
+        flex: 0 0 auto; 
+    }
+
+    #button-wrap {
+        align-items: flex-start;
+        align-self: flex-start;
+        width: auto;
+
+
+        margin-left: 24px; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 12px;
+    }
+
+    #button-wrap button {
+        width: 100px;
+        flex: none;
     }
 
 </style>
@@ -41,7 +61,7 @@
         </div>
 
 
-        <div style="margin-left: 24px; display: flex; flex-direction: column; gap: 12px;">
+        <div id="button-wrap">
             <button id="btn-a">
                 <img src="dithered.png" width="35px">
             </button>

@@ -1,12 +1,13 @@
 .container {
-  display: flex;
-  align-items: center;
+  display: flex; 
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  border: 1px solid #ccc;
-  padding: 10px;
   font-family: sans-serif;
 }
+
+/* ccc*/
 
 #btn-f img {
   width: 70px;
