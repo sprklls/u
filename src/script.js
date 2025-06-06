@@ -1,9 +1,12 @@
+"use strict";
 // I LOVE TYPESCRIPT!!!!
 // javascript is so ass
 // ts declaration
-// Math in ES6+
 var canvas = document.getElementById("canvas");
 var globalCircleRadius = 10;
+window.sharedData = window.sharedData || {};
+window.sharedData.plasterIMG = document.getElementById('dropdownBtn').querySelector('img').src;
+// let globalLayer = 0;
 var ctx = canvas.getContext("2d"); // not null assertion
 var mouseDown = false;
 var minOffset = 1;
@@ -29,7 +32,9 @@ var AFC = /** @class */ (function () {
         this.rad = Math.PI / 10;
         this.imgWidth = -1;
         this.imgHeight = -1;
+        // public id = 0;
         this.IMG = new Image();
+        this.hasLoaded = false;
         this.leftGlobal = null;
         this.rightGlobal = null;
         this.leftDot = null;
@@ -37,21 +42,18 @@ var AFC = /** @class */ (function () {
         this.centerDot = null;
         this.centerpoint = centerpoint;
         this.type = type;
+        // this.id = ++globalLayer; 
         this.loadAssetEtc();
     }
     AFC.prototype.loadAssetEtc = function () {
         var _this = this;
-        if (this.type === "plaster") {
-            this.IMG.src = "plaster.png"; // or your desired file path
-            this.IMG.onload = function () {
-                _this.imgWidth = _this.IMG.width;
-                _this.imgHeight = _this.IMG.height;
-                _this.updateBoundary();
-            };
-        }
-        else {
-            console.warn("Unknown AFC type: ", this.type);
-        }
+        this.IMG.src = this.type; // or your desired file path
+        this.IMG.onload = function () {
+            _this.imgWidth = _this.IMG.width;
+            _this.imgHeight = _this.IMG.height;
+            _this.hasLoaded = true;
+            _this.updateBoundary();
+        };
     };
     AFC.prototype.updateBoundary = function () {
         var leftLocal = { x: -this.imgWidth / 2, y: 0 };
@@ -94,6 +96,8 @@ var AFC = /** @class */ (function () {
         this.updateBoundary();
     };
     AFC.prototype.draw = function (ctx) {
+        if (!this.hasLoaded)
+            return;
         var imgWidth = this.IMG.width;
         var imgHeight = this.IMG.height;
         ctx.save();
@@ -194,7 +198,6 @@ var Line = /** @class */ (function () {
         this.downbb = [[]];
     }
     Line.prototype.addPoint = function (xVal, yVal) {
-        //console.log(`Adding point: (${xVal}, ${yVal})`);
         this.points.push({ x: xVal, y: yVal });
         this.updatePerpendiculars(this.points.length - 1);
         // update the last point
@@ -234,7 +237,6 @@ var Line = /** @class */ (function () {
         this.down.push(p0_down);
         // ---bb
         var offsetDistance2 = Math.min(maxOffset, Math.max(minOffset, len * scaleFactor) * 0.25); // magic number
-        //console.log("offsetDistance2: ", offsetDistance2);
         if (offsetDistance2 < 2) {
             this.upbb.push([]);
             this.downbb.push([]); ///its ok
@@ -421,7 +423,6 @@ function randomDripFinder(line) {
     var returnedPoints = [];
     var validSegments = dripSortHelper(line); // has to return it in that format anyway
     if (validSegments.length == 0) {
-        //console.log("nothing to bleed");
         return null;
     }
     ///// process valid segments
@@ -492,7 +493,6 @@ function animate() {
 //** start animation */
 window.onload = function () {
     animate();
-    //console.log("canvas loaded");
 };
 //*** Canvas crap */
 canvas.addEventListener("mouseout", function (e) {
@@ -539,13 +539,16 @@ canvas.addEventListener("mousedown", function (e) {
             }
         }
         else {
-            for (var _i = 0, afc_1 = afc; _i < afc_1.length; _i++) {
-                var item = afc_1[_i];
+            for (var i = afc.length - 1; i >= 0; i--) {
+                // go through backwards because recent (top layer)
+                var item = afc[i];
+                console.log(item.getType());
                 if (item.centerDot && item.centerDot.isTouching(pos)) {
-                    console.log("Touched center dot of AFC at", item.getCenterPoint());
+                    //  console.log("Touched center dot of AFC at", item.getCenterPoint());
                     reset = false;
                     currentAFC = item;
                     currentAFC.active = true;
+                    break;
                 }
             }
         }
@@ -557,9 +560,6 @@ canvas.addEventListener("mousedown", function (e) {
             }
         }
     }
-    // let pos = getMousePos(e);
-    // currentLine.addPoint(pos.x, pos.y);
-    ////console.log("mouse down at: ", pos.x, pos.y);
 });
 canvas.addEventListener("mouseup", function (e) {
     mouseDown = false;
@@ -569,7 +569,6 @@ canvas.addEventListener("mouseup", function (e) {
     else if (simMode == 1) {
         currentMode = null;
     }
-    ////console.log("new line created");
 });
 function getMousePos(event) {
     var rect = canvas.getBoundingClientRect(); // Get the canvas's bounding box
@@ -654,9 +653,7 @@ document.addEventListener("DOMContentLoaded", function () {
     (_b = document.getElementById("btn-f")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", function () {
         simMode = 1;
         setCursorImg(null);
-        // plaster cursor
-        afc.push(new AFC({ x: 100, y: 100 }, "plaster"));
-        //console.log("added plaster at 100, 100");
+        afc.push(new AFC({ x: 100, y: 100 }, window.sharedData.plasterIMG));
     });
     (_c = document.getElementById("btn-a")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", function () {
         simMode = 0;
@@ -679,7 +676,6 @@ document.addEventListener("DOMContentLoaded", function () {
     (_e = document.getElementById("btn-c")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", function () {
         setCursorImg("gat.png");
         simMode = 0;
-        //console.log("cat image set");
         minOffset = 0.5;
         maxOffset = 5;
         scaleFactor = 0.01;
@@ -718,8 +714,8 @@ function fadeDots() {
     animateFade();
 }
 function drawAfc() {
-    for (var _i = 0, afc_2 = afc; _i < afc_2.length; _i++) {
-        var item = afc_2[_i];
+    for (var _i = 0, afc_1 = afc; _i < afc_1.length; _i++) {
+        var item = afc_1[_i];
         if (!(item instanceof AFC))
             continue; // Ensure item is of type AFC
         item.draw(ctx);
@@ -729,5 +725,4 @@ function drawAfc() {
 }
 function addAfc(point, type) {
     afc.push(new AFC(point, type));
-    //console.log(`Added AFC of type ${type} at (${point.x}, ${point.y})`);
 }

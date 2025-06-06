@@ -5,11 +5,16 @@
 
 // ts declaration
 
-// Math in ES6+
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
 const globalCircleRadius = 10;
+
+window.sharedData = window.sharedData || {};
+window.sharedData.plasterIMG = document.getElementById('dropdownBtn')!.querySelector('img')!.src;
+
+// let globalLayer = 0;
+
 
 const ctx = canvas.getContext("2d")!; // not null assertion
 let mouseDown = false;
@@ -45,8 +50,11 @@ class AFC {
     private rad: number = Math.PI / 10;
     private imgWidth: number = -1;
     private imgHeight: number = -1;
+
+    // public id = 0;
     
     private IMG = new Image();
+    private hasLoaded = false;
 
     public leftGlobal: { x: number, y: number } | null = null;
     public rightGlobal: { x: number, y: number } | null = null;
@@ -58,26 +66,23 @@ class AFC {
     constructor(centerpoint: { x: number, y: number }, type: string) {
         this.centerpoint = centerpoint;
         this.type = type;
+        // this.id = ++globalLayer; 
 
         this.loadAssetEtc();
     }
 
     private loadAssetEtc(): void {
-        if (this.type === "plaster") {
 
-            this.IMG.src = "plaster.png"; // or your desired file path
+        this.IMG.src = this.type; // or your desired file path
 
+        this.IMG.onload = () => {
+            this.imgWidth = this.IMG.width;
+            this.imgHeight = this.IMG.height;
+            this.hasLoaded = true;
 
-            this.IMG.onload = () => {
-                this.imgWidth = this.IMG.width;
-                this.imgHeight = this.IMG.height;
+            this.updateBoundary();
+        } 
 
-                this.updateBoundary();
-            } 
-
-        } else {
-            console.warn("Unknown AFC type: ", this.type);
-        }
     }
 
     private updateBoundary(): void {
@@ -131,6 +136,8 @@ class AFC {
     }   
 
     draw(ctx: CanvasRenderingContext2D): void {
+
+        if (!this.hasLoaded) return;
 
         const imgWidth = this.IMG.width;
         const imgHeight = this.IMG.height;
@@ -273,7 +280,6 @@ class Line {
     }
 
     public addPoint(xVal: number, yVal: number): void {
-        //console.log(`Adding point: (${xVal}, ${yVal})`);
         this.points.push({x: xVal, y: yVal});
 
         this.updatePerpendiculars(this.points.length - 1);
@@ -332,7 +338,6 @@ class Line {
 
         let offsetDistance2 = Math.min(maxOffset, Math.max(minOffset, len * scaleFactor) * 0.25); // magic number
 
-        //console.log("offsetDistance2: ", offsetDistance2);
 
         if (offsetDistance2 < 2)  {
             this.upbb.push([]);
@@ -603,7 +608,6 @@ function randomDripFinder(line: Line): { x: number, y: number }[]  | null{
     }[][] = dripSortHelper(line); // has to return it in that format anyway
 
     if (validSegments.length == 0) {
-        //console.log("nothing to bleed");
         return null; 
     }
 
@@ -695,7 +699,6 @@ function animate() {
 //** start animation */
 window.onload = () => {
     animate();
-    //console.log("canvas loaded");
 };
     
 //*** Canvas crap */
@@ -760,16 +763,23 @@ canvas.addEventListener("mousedown", (e) => {
             }
         } else {
 
-            for (let item of afc) {
+            for (let i = afc.length - 1; i >= 0; i--) {
+
+                // go through backwards because recent (top layer)
+                let item = afc[i];
+                console.log(item.getType());
+
                 if (item.centerDot && item.centerDot.isTouching(pos)) {
-                    console.log("Touched center dot of AFC at", item.getCenterPoint());
+                   //  console.log("Touched center dot of AFC at", item.getCenterPoint());
                     reset = false;
 
                     currentAFC=item;
                     currentAFC.active = true;
-        
+
+                    break;
                 }
             }
+
         }
 
         if (reset == true) {
@@ -781,9 +791,6 @@ canvas.addEventListener("mousedown", (e) => {
         }
     }
 
-    // let pos = getMousePos(e);
-    // currentLine.addPoint(pos.x, pos.y);
-    ////console.log("mouse down at: ", pos.x, pos.y);
 });
 
 
@@ -796,7 +803,6 @@ canvas.addEventListener("mouseup", (e) => {
         currentMode = null;
     }
 
-    ////console.log("new line created");
 
 });
 
@@ -907,11 +913,7 @@ document.addEventListener("DOMContentLoaded", () => {
         simMode = 1;
         setCursorImg(null);
 
-        // plaster cursor
-
-
-        afc.push(new AFC({ x: 100, y: 100 }, "plaster"));
-        //console.log("added plaster at 100, 100");
+        afc.push(new AFC({ x: 100, y: 100 }, window.sharedData.plasterIMG));
     });
 
     document.getElementById("btn-a")?.addEventListener("click", () => {
@@ -941,7 +943,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btn-c")?.addEventListener("click", () => {
         setCursorImg("gat.png");
         simMode = 0;
-        //console.log("cat image set");
 
         minOffset = 0.5;  
         maxOffset = 5;
@@ -1003,6 +1004,5 @@ function drawAfc() {
 
 function addAfc(point: { x: number, y: number }, type: string) {
     afc.push(new AFC(point, type));
-    //console.log(`Added AFC of type ${type} at (${point.x}, ${point.y})`);
 }
 
