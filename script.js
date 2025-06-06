@@ -584,7 +584,6 @@ function moveMouseImage(_a) {
     var x = _a.x, y = _a.y;
     if (simMode == 0) {
         var img = document.getElementById("cursor");
-        img.style.position = "absolute";
         img.style.left = "".concat(x + offsetX, "px");
         img.style.top = "".concat(y + offsetY, "px");
     }
