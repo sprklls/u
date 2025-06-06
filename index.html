@@ -107,20 +107,19 @@ By typing “okay” you acknowledge you have read and understood this.`;
     window.addEventListener("DOMContentLoaded", () => {
         document.getElementById("notice").textContent = tw;
         inputBox.value = "";
-    });
 
-    inputBox.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            let inputBox = document.getElementById("inputBox");
-            // load it in here 
+        inputBox.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
 
-            if (inputBox.value === "yeah") {
-                window.location.href = "new.html";
-            } else {
-                //
+                if (inputBox.value === "yeah") {
+                    window.location.href = "new.html";
+                } else {
+                    //
+                }
             }
-        }
+        });
     });
+
 
 
   </script>
