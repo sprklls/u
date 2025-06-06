@@ -76,52 +76,54 @@
   </div>
 
   <script>
-    let tw = `TW for this site, it contains themes of self-injury. 
+
+
+let tw = `TW for this site, it contains themes of self-injury. 
 
 Background: This website is inspired by another similar website called fataltotheflesh (2004). 
-        
+    
 In no way does this website try to promote or normalize self-harm. It’s intended as a way to help people who sh by providing a simulated form of release. It is NOT a tool to glorify, trigger, or encourage self-harm in yourself or others.
 
 If it is more triggering than it is helpful, please don't use the site.
 
 If you're in crisis,
 I know that it can feel pointless or exhausting to reach out. But even if it doesn’t feel like it now, you do deserve to heal. In the larger scope of things, there really is all the time in the world, and it will get better. ♡
-        
+    
 By typing “okay” you acknowledge you have read and understood this.`;
 
-    let faqcontent = `no faq yet;
-    `;
+let faqcontent = `no faq yet;
+`;
 
-    function showfaq() {
-        document.getElementById("notice").textContent = faqcontent;
+function showfaq() {
+    document.getElementById("notice").value = faqcontent;
+}
+
+function source() {
+    window.open("https://github.com/sprklls/u");
+}
+
+function reset() {
+    document.getElementById("notice").value = tw;
+}
+
+let inputBox = document.getElementById("inputBox");
+
+document.getElementById("notice").value = tw;
+inputBox.value = "";
+
+inputBox.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+
+        if (inputBox.value === "okay") {
+            window.location.href = "new.html";
+        } else {
+            //
+        }
     }
-
-    function source() {
-        window.open("https://github.com/sprklls/u");
-    }
-
-    function reset() {
-        document.getElementById("notice").textContent = tw;
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("notice").textContent = tw;
-        inputBox.value = "";
-
-        inputBox.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-
-                if (inputBox.value === "yeah") {
-                    window.location.href = "new.html";
-                } else {
-                    //
-                }
-            }
-        });
-    });
+});
 
 
 
-  </script>
+</script>
 </body>
 </html>
