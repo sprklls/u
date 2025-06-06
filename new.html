@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simp</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+      #cursor {
+        display:block;
+        position: fixed;
+        pointer-events: none; /* don't capture mouse events */
+        /* appear in screenshots */
+        z-index: 999;
+
+        
+    }
+
+    canvas {
+      display: block;
+      border: 1px solid black;
+      width: 500px;
+      height: 500px;
+    }
+
+    button {
+      padding: 10px 5px 10px 5px;
+    }
+
+</style>
+   
+  </style>
+</head>
+<body>
+    <img src="dithered.png"  id="cursor" >
+
+
+    <div style="display: flex; " id = "coverall">
+        <div>
+            <canvas id="canvas" width="500" height="500"></canvas>
+        </div>
+
+
+        <div style="margin-left: 24px; display: flex; flex-direction: column; gap: 12px;">
+            <button id="btn-a">
+                <img src="dithered.png" width="35px">
+            </button>
+
+            <button id="btn-b">
+                <img src="img2.png" width ="35px">
+            </button>
+
+            <button id="btn-c">
+                <img src="gat.png" width ="35px">
+            </button>
+
+            <button id="btn-d">
+                <img src="sharp.png" width="35px">
+            </button>
+
+            <button id="btn-e">
+                <img src="shower.jpg" width="70px" >
+            </button>
+
+              <!--
+              <select style="padding: 5px;">
+                <option value="hk-pink">
+                  hk-pink
+                </option>
+                <option value="kuromi">Option 1</option>
+                <option value="2">Option 2</option>
+              </select>
+            -->
+
+            <div class="container">
+                <button id="btn-f">
+                    <img src="plastersicon.png" alt="icon">
+                </button>
+            
+                <div class="custom-dropdown" id="myDropdown">
+                    <div class="dropdown-btn" id="dropdownBtn">
+
+                        <img src="plaster.png" alt="icon1">
+                        <span>▼</span>
+
+                    </div>
+                    <div class="dropdown-content" id="dropdownContent">
+                    <div>
+                        <img src="plaster.png"> 
+                    </div>
+                    <div>
+                        <img src="df1.png"> 
+                    </div>
+                    <div>
+                        <img src="kur.png"> 
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script src="script.js"></script>
+    <script src="dropdown.js"></script>
+  
+
+
+</body>
+</html>

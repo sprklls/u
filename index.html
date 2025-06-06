@@ -3,110 +3,126 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Simp</title>
-  <link rel="stylesheet" href="style.css">
+  <title>title</title>
+
   <style>
-      #cursor {
-        display:block;
+    body, html {
         position: fixed;
-        pointer-events: none; /* don't capture mouse events */
-        /* appear in screenshots */
-        z-index: 999;
-
-        
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 10px;
     }
 
-    canvas {
-      display: block;
-      border: 1px solid black;
-      width: 500px;
-      height: 500px;
+    #container {
+      width: 600px;
+      height: 400px;
+      background: rgb(253, 236, 236);
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      border-radius: 8px;
+
+      position: relative;
     }
 
-    button {
-      padding: 10px 5px 10px 5px;
+    textarea {
+        font-size: 12px;
+        width: 260px;
+        height: 250px;
     }
 
-</style>
-   
+    #subtext {
+        position: absolute;
+        bottom: 0px;
+        right: 15px;
+        font-size: 12px;
+        font-family: sans-serif;
+        color: rgb(0, 0, 0, 0.25);
+    }
+
   </style>
 </head>
 <body>
-    <img src="dithered.png"  id="cursor" >
 
+  <div id="container">
 
-    <div style="display: flex; " id = "coverall">
-        <div>
-            <canvas id="canvas" width="500" height="500"></canvas>
-        </div>
+    <h3 style="margin: 0">𓆝 𓆟 𓆞 𓆝 𓆟</h3>
 
-
-        <div style="margin-left: 24px; display: flex; flex-direction: column; gap: 12px;">
-            <button id="btn-a">
-                <img src="dithered.png" width="35px">
-            </button>
-
-            <button id="btn-b">
-                <img src="img2.png" width ="35px">
-            </button>
-
-            <button id="btn-c">
-                <img src="gat.png" width ="35px">
-            </button>
-
-            <button id="btn-d">
-                <img src="sharp.png" width="35px">
-            </button>
-
-            <button id="btn-e">
-                <img src="shower.jpg" width="70px" >
-            </button>
-
-              <!--
-              <select style="padding: 5px;">
-                <option value="hk-pink">
-                  hk-pink
-                </option>
-                <option value="kuromi">Option 1</option>
-                <option value="2">Option 2</option>
-              </select>
-            -->
-
-            <div class="container">
-                <button id="btn-f">
-                    <img src="plastersicon.png" alt="icon">
-                </button>
-            
-                <div class="custom-dropdown" id="myDropdown">
-                    <div class="dropdown-btn" id="dropdownBtn">
-
-                        <img src="plaster.png" alt="icon1">
-                        <span>▼</span>
-
-                    </div>
-                    <div class="dropdown-content" id="dropdownContent">
-                    <div>
-                        <img src="plaster.png"> 
-                    </div>
-                    <div>
-                        <img src="df1.png"> 
-                    </div>
-                    <div>
-                        <img src="kur.png"> 
-                    </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+    <div class="top" style="margin-bottom: 2px">
+        ├─
+        <button onclick="reset()">reset</button>
+        <button onclick="showfaq()">questions</button>
+        <button onclick="source()">src</button>
+        ─┤
     </div>
 
+    <textarea id="notice" readonly>
+    </textarea>
+
+    <div>
+        ├──
+        <input id="inputBox" type="text" placeholder='｡𖦹°‧' />
+        ──┤
+    </div>
+
+    <p id="subtext">© 2025 sprklls</p>
+
+    
+  </div>
+
+  <script>
+    let tw = `TW for this site, it contains themes of self-injury. 
+
+Background: This website is inspired by another similar website called fataltotheflesh (2004). 
+        
+In no way does this website try to promote or normalize self-harm. It’s intended as a way to help people who sh by providing a simulated form of release. It is NOT a tool to glorify, trigger, or encourage self-harm in yourself or others.
+
+If it is more triggering than it is helpful, please don't use the site.
+
+If you're in crisis,
+I know that it can feel pointless or exhausting to reach out. But even if it doesn’t feel like it now, you do deserve to heal. In the larger scope of things, there really is all the time in the world, and it will get better. ♡
+        
+By typing “okay” you acknowledge you have read and understood this.`;
+
+    let faqcontent = `no faq yet;
+    `;
+
+    function showfaq() {
+        document.getElementById("notice").textContent = faqcontent;
+    }
+
+    function source() {
+        window.open("https://github.com/sprklls/u");
+    }
+
+    function reset() {
+        document.getElementById("notice").textContent = tw;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("notice").textContent = tw;
+        inputBox.value = "";
+    });
+
+    inputBox.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            let inputBox = document.getElementById("inputBox");
+            // load it in here 
+
+            if (inputBox.value === "yeah") {
+                window.location.href = "new.html";
+            } else {
+                //
+            }
+        }
+    });
 
 
-    <script src="script.js"></script>
-    <script src="dropdown.js"></script>
-  
-
-
+  </script>
 </body>
 </html>
