@@ -471,7 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("btn-a")?.addEventListener("click", () => {
         simMode = 0;
-        setCursorImg("/assets/cursor_icons/dithered.png");
+        setCursorImg("assets/cursor_icons/dithered.png");
 
         offsetX = 8;
         offsetY = -52;
@@ -482,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("btn-b")?.addEventListener("click", () => {
-        setCursorImg("/assets/cursor_icons/img2.png");
+        setCursorImg("assets/cursor_icons/img2.png");
         simMode = 0;
 
         offsetX = 10;
@@ -494,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("btn-c")?.addEventListener("click", () => {
-        setCursorImg("/assets/cursor_icons/gat.png");
+        setCursorImg("assets/cursor_icons/gat.png");
         simMode = 0;
 
         globals.constants.minOffset = 0.5;  
@@ -506,7 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }); 
 
     document.getElementById("btn-d")?.addEventListener("click", () => {
-        setCursorImg("/assets/cursor_icons/sharp.png");
+        setCursorImg("assets/cursor_icons/sharp.png");
         simMode = 0;
 
         globals.constants.minOffset = 0.5;  
