@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",       // or "ES6"
+    "target": "ES6",          // or later
+    "moduleResolution": "bundler", // optional but good for browser setups
+    "outDir": "./dist",       // or wherever you're outputting
+    "strict": true,
+    "esModuleInterop": true
+  },
+  
+  
+
+  "include": [
+    "**/*",
+    "scripts/window.d.ts" 
+  ]
+}
