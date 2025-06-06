@@ -305,7 +305,7 @@ function setCursorImg(s) {
         document.body.style.cursor = "none";
         if (!cElement) {
             const img = document.createElement("img");
-            img.src = "https://sprklls.github.io/u" + s; // temporary fix..
+            img.src = s; // temporary fix..
             img.id = "cursor";
             img.style.position = "absolute";
             img.style.pointerEvents = "none";
