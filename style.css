@@ -30,7 +30,9 @@
   background: white;
 }
 
-
+canvas {
+  touch-action: none;
+}
 
 .dropdown-content {
   position: absolute;

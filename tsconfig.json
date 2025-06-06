@@ -8,6 +8,6 @@
 
   "include": [
     "**/*",
-    "global.d.ts" 
+    "window.d.ts" 
   ]
 }

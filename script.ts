@@ -1,10 +1,4 @@
-
-
-// I LOVE TYPESCRIPT!!!!
-// javascript is so ass
-
-// ts declaration
-
+/// <reference path="window.d.ts" />
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
@@ -291,9 +285,9 @@ class Line {
 
     private updatePerpendiculars(cur: number): void {    
 
-        console.log(this.points);
-        console.log(this.up);
-        console.log(this.down);
+        // console.log(this.points);
+        // console.log(this.up);
+        // console.log(this.down);
         // console.log(this.upbb);
         // console.log(this.downbb);
 
@@ -707,31 +701,19 @@ canvas.addEventListener("mouseout", (e) => {
 
 });
 
-canvas.addEventListener("mousemove", (e) => {
-    let pos = getMousePos(e);
-    if (!mouseDown) return;
-
-    if (simMode == 0) {
-        currentLine.addPoint(pos.x, pos.y);
-    }
-
-});
-
-
 let currentAFC: AFC | null = null;
 let currentMode: string | null = null;
 
 let originalDotCenter: { x: number, y: number } | null = null;
 let initialMouseCenter: { x: number, y: number } | null = null;
 
-canvas.addEventListener("mousedown", (e) => {
-    mouseDown = true;
 
+function mouseDownHere(x: number, y: number) {
     if (simMode == 0) {
         newLine();
 
     } else if (simMode == 1) {
-        let pos = getMousePos(e);
+        let pos = {x: x, y: y};
 
         let reset = true;
 
@@ -790,11 +772,19 @@ canvas.addEventListener("mousedown", (e) => {
             }
         }
     }
+}
+
+
+canvas.addEventListener("pointerdown", (e) => {
+    mouseDown = true;
+
+    let pos = {x: e.clientX, y: e.clientY};
+    mouseDownHere(pos.x, pos.y);
 
 });
 
 
-canvas.addEventListener("mouseup", (e) => {
+canvas.addEventListener("pointerup", (e) => {
     mouseDown = false;
 
     if (simMode == 0) {
@@ -830,10 +820,23 @@ function moveMouseImage({ x, y }: { x: number, y: number }): void {
 }
 
 // window mousemove
-window.addEventListener("mousemove", (e) => {
-    let pos = getMousePos(e);
-
+window.addEventListener("pointermove", (e) => {
+    let pos = {x: e.clientX, y: e.clientY};
     moveMouseImage(pos);
+
+
+    if (!mouseDown) return;
+
+    if (simMode == 0) {
+        currentLine.addPoint(pos.x, pos.y);
+    }
+
+    pmove(pos);
+});
+
+
+function pmove({x, y} : {x: number, y: number}) {
+    let pos = {x: x, y: y};
 
     if (simMode == 1) {
         if (currentAFC) {
@@ -866,8 +869,7 @@ window.addEventListener("mousemove", (e) => {
             }
         }
     }
-});
-
+}
 
 
 function setCursorImg(s: string | null): void {
@@ -1006,3 +1008,17 @@ function addAfc(point: { x: number, y: number }, type: string) {
     afc.push(new AFC(point, type));
 }
 
+
+
+
+function isMobile() {
+    return /Mobi|Android/i.test(navigator.userAgent);
+}
+
+if (isMobile()) {
+canvas.style.touchAction = 'none';
+
+canvas.addEventListener('touchstart', e => e.preventDefault());
+canvas.addEventListener('touchmove', e => e.preventDefault());
+canvas.addEventListener('touchend', e => e.preventDefault());
+}

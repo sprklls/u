@@ -1,7 +1,4 @@
-"use strict";
-// I LOVE TYPESCRIPT!!!!
-// javascript is so ass
-// ts declaration
+/// <reference path="window.d.ts" />
 var canvas = document.getElementById("canvas");
 var globalCircleRadius = 10;
 window.sharedData = window.sharedData || {};
@@ -498,25 +495,16 @@ window.onload = function () {
 canvas.addEventListener("mouseout", function (e) {
     mouseDown = false;
 });
-canvas.addEventListener("mousemove", function (e) {
-    var pos = getMousePos(e);
-    if (!mouseDown)
-        return;
-    if (simMode == 0) {
-        currentLine.addPoint(pos.x, pos.y);
-    }
-});
 var currentAFC = null;
 var currentMode = null;
 var originalDotCenter = null;
 var initialMouseCenter = null;
-canvas.addEventListener("mousedown", function (e) {
-    mouseDown = true;
+function mouseDownHere(x, y) {
     if (simMode == 0) {
         newLine();
     }
     else if (simMode == 1) {
-        var pos = getMousePos(e);
+        var pos = { x: x, y: y };
         var reset = true;
         if (currentAFC) {
             var item = currentAFC;
@@ -560,8 +548,13 @@ canvas.addEventListener("mousedown", function (e) {
             }
         }
     }
+}
+canvas.addEventListener("pointerdown", function (e) {
+    mouseDown = true;
+    var pos = { x: e.clientX, y: e.clientY };
+    mouseDownHere(pos.x, pos.y);
 });
-canvas.addEventListener("mouseup", function (e) {
+canvas.addEventListener("pointerup", function (e) {
     mouseDown = false;
     if (simMode == 0) {
         randomlyAddADrip();
@@ -584,14 +577,25 @@ function moveMouseImage(_a) {
     var x = _a.x, y = _a.y;
     if (simMode == 0) {
         var img = document.getElementById("cursor");
+        img.style.position = "absolute";
         img.style.left = "".concat(x + offsetX, "px");
         img.style.top = "".concat(y + offsetY, "px");
     }
 }
 // window mousemove
-window.addEventListener("mousemove", function (e) {
-    var pos = getMousePos(e);
+window.addEventListener("pointermove", function (e) {
+    var pos = { x: e.clientX, y: e.clientY };
     moveMouseImage(pos);
+    if (!mouseDown)
+        return;
+    if (simMode == 0) {
+        currentLine.addPoint(pos.x, pos.y);
+    }
+    pmove(pos);
+});
+function pmove(_a) {
+    var x = _a.x, y = _a.y;
+    var pos = { x: x, y: y };
     if (simMode == 1) {
         if (currentAFC) {
             if (currentMode === "rotate") {
@@ -619,7 +623,7 @@ window.addEventListener("mousemove", function (e) {
             }
         }
     }
-});
+}
 function setCursorImg(s) {
     var cElement = document.getElementById("cursor");
     if (s) {
@@ -724,4 +728,13 @@ function drawAfc() {
 }
 function addAfc(point, type) {
     afc.push(new AFC(point, type));
+}
+function isMobile() {
+    return /Mobi|Android/i.test(navigator.userAgent);
+}
+if (isMobile()) {
+    canvas.style.touchAction = 'none';
+    canvas.addEventListener('touchstart', function (e) { return e.preventDefault(); });
+    canvas.addEventListener('touchmove', function (e) { return e.preventDefault(); });
+    canvas.addEventListener('touchend', function (e) { return e.preventDefault(); });
 }
