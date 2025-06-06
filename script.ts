@@ -169,7 +169,8 @@ class AFC {
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            if (this.leftDot) this.leftDot.draw();
+            // if (this.leftDot) this.leftDot.draw();
+            
             if (this.rightDot) this.rightDot.draw();  
             if (this.centerDot) this.centerDot.draw();
             ctx.restore();
