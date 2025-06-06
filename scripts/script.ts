@@ -432,7 +432,7 @@ function setCursorImg(s: string | null): void {
 
         if (!cElement) {
             const img: HTMLImageElement = document.createElement("img");
-            img.src = s;
+            img.src = "https://sprklls.github.io/u" +s; // temporary fix..
             img.id = "cursor";
             img.style.position = "absolute";
             img.style.pointerEvents = "none"; 
