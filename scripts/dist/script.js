@@ -349,7 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
         offsetY = 10;
         globals.constants.minOffset = 1;
         globals.constants.maxOffset = 30;
-        globals.constants.scaleFactor = 0.4;
+        globals.constants.scaleFactor = 0.25;
     });
     (_e = document.getElementById("btn-c")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", () => {
         setCursorImg("assets/cursor_icons/gat.png");

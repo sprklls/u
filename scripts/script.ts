@@ -490,7 +490,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         globals.constants.minOffset = 1;   
         globals.constants.maxOffset = 30;
-        globals.constants.scaleFactor = 0.4; 
+        globals.constants.scaleFactor = 0.25; 
     });
 
     document.getElementById("btn-c")?.addEventListener("click", () => {
