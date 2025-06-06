@@ -7,7 +7,7 @@
   },
 
   "include": [
-    "src/**/*",
-    "src/global.d.ts" 
+    "**/*",
+    "global.d.ts" 
   ]
 }
