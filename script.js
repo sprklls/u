@@ -202,9 +202,9 @@ var Line = /** @class */ (function () {
         // if it's 2 length it will try to update which we dont want
     };
     Line.prototype.updatePerpendiculars = function (cur) {
-        console.log(this.points);
-        console.log(this.up);
-        console.log(this.down);
+        // console.log(this.points);
+        // console.log(this.up);
+        // console.log(this.down);
         // console.log(this.upbb);
         // console.log(this.downbb);
         var p0 = this.points[cur];
@@ -491,6 +491,13 @@ function animate() {
 window.onload = function () {
     animate();
 };
+function getPointerPos(e) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
 //*** Canvas crap */
 canvas.addEventListener("mouseout", function (e) {
     mouseDown = false;
@@ -499,12 +506,14 @@ var currentAFC = null;
 var currentMode = null;
 var originalDotCenter = null;
 var initialMouseCenter = null;
-function mouseDownHere(x, y) {
+canvas.addEventListener("pointerdown", function (e) {
+    e.preventDefault();
+    mouseDown = true;
     if (simMode == 0) {
         newLine();
     }
     else if (simMode == 1) {
-        var pos = { x: x, y: y };
+        var pos = getPointerPos(e);
         var reset = true;
         if (currentAFC) {
             var item = currentAFC;
@@ -548,13 +557,9 @@ function mouseDownHere(x, y) {
             }
         }
     }
-}
-canvas.addEventListener("pointerdown", function (e) {
-    mouseDown = true;
-    var pos = { x: e.clientX, y: e.clientY };
-    mouseDownHere(pos.x, pos.y);
-});
+}, { passive: false });
 canvas.addEventListener("pointerup", function (e) {
+    e.preventDefault();
     mouseDown = false;
     if (simMode == 0) {
         randomlyAddADrip();
@@ -562,14 +567,7 @@ canvas.addEventListener("pointerup", function (e) {
     else if (simMode == 1) {
         currentMode = null;
     }
-});
-function getMousePos(event) {
-    var rect = canvas.getBoundingClientRect(); // Get the canvas's bounding box
-    return {
-        x: event.clientX - rect.left, // Mouse X relative to the canvas
-        y: event.clientY - rect.top // Mouse Y relative to the canvas
-    };
-}
+}, { passive: false });
 var offsetX = 8;
 var offsetY = -52;
 document.body.style.cursor = "none";
@@ -584,42 +582,41 @@ function moveMouseImage(_a) {
 }
 // window mousemove
 window.addEventListener("pointermove", function (e) {
-    var pos = { x: e.clientX, y: e.clientY };
+    e.preventDefault();
+    var pos = getPointerPos(e);
     moveMouseImage(pos);
     if (!mouseDown)
         return;
     if (simMode == 0) {
         currentLine.addPoint(pos.x, pos.y);
     }
-    pmove(pos);
-});
-function pmove(_a) {
-    var x = _a.x, y = _a.y;
-    var pos = { x: x, y: y };
-    if (simMode == 1) {
-        if (currentAFC) {
-            if (currentMode === "rotate") {
-                var mouseX = pos.x;
-                var mouseY = pos.y;
-                var dx = mouseX - currentAFC.getCenterPoint().x;
-                var dy = mouseY - currentAFC.getCenterPoint().y;
-                var angle = Math.atan2(dy, dx);
-                currentAFC.setRad(angle);
-            }
-            else if (currentMode === "center") {
-                /*
-                currentAFC.setCenterPoint({ x: pos.x, y: pos.y });
-                */
-                if (originalDotCenter && initialMouseCenter) {
-                    // Calculate offset
-                    var offsetX_1 = pos.x - initialMouseCenter.x;
-                    var offsetY_1 = pos.y - initialMouseCenter.y;
-                    // Apply offset to center position
-                    currentAFC.setCenterPoint({
-                        x: originalDotCenter.x + offsetX_1,
-                        y: originalDotCenter.y + offsetY_1,
-                    });
-                }
+    else if (simMode == 1) {
+        pmove(pos);
+    }
+}, { passive: false });
+function pmove(pos) {
+    if (currentAFC) {
+        if (currentMode === "rotate") {
+            var mouseX = pos.x;
+            var mouseY = pos.y;
+            var dx = mouseX - currentAFC.getCenterPoint().x;
+            var dy = mouseY - currentAFC.getCenterPoint().y;
+            var angle = Math.atan2(dy, dx);
+            currentAFC.setRad(angle);
+        }
+        else if (currentMode === "center") {
+            /*
+            currentAFC.setCenterPoint({ x: pos.x, y: pos.y });
+            */
+            if (originalDotCenter && initialMouseCenter) {
+                // Calculate offset
+                var offsetX_1 = pos.x - initialMouseCenter.x;
+                var offsetY_1 = pos.y - initialMouseCenter.y;
+                // Apply offset to center position
+                currentAFC.setCenterPoint({
+                    x: originalDotCenter.x + offsetX_1,
+                    y: originalDotCenter.y + offsetY_1,
+                });
             }
         }
     }
@@ -728,13 +725,4 @@ function drawAfc() {
 }
 function addAfc(point, type) {
     afc.push(new AFC(point, type));
-}
-function isMobile() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-}
-if (isMobile()) {
-    canvas.style.touchAction = 'none';
-    canvas.addEventListener('touchstart', function (e) { return e.preventDefault(); });
-    canvas.addEventListener('touchmove', function (e) { return e.preventDefault(); });
-    canvas.addEventListener('touchend', function (e) { return e.preventDefault(); });
 }

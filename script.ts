@@ -695,6 +695,15 @@ window.onload = () => {
     animate();
 };
     
+function getPointerPos(e: PointerEvent) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
+
 //*** Canvas crap */
 canvas.addEventListener("mouseout", (e) => {
     mouseDown = false;
@@ -708,12 +717,15 @@ let originalDotCenter: { x: number, y: number } | null = null;
 let initialMouseCenter: { x: number, y: number } | null = null;
 
 
-function mouseDownHere(x: number, y: number) {
+canvas.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    mouseDown = true;
+
     if (simMode == 0) {
         newLine();
 
     } else if (simMode == 1) {
-        let pos = {x: x, y: y};
+        let pos = getPointerPos(e);
 
         let reset = true;
 
@@ -772,19 +784,12 @@ function mouseDownHere(x: number, y: number) {
             }
         }
     }
-}
-
-
-canvas.addEventListener("pointerdown", (e) => {
-    mouseDown = true;
-
-    let pos = {x: e.clientX, y: e.clientY};
-    mouseDownHere(pos.x, pos.y);
-
-});
+}, { passive: false });
 
 
 canvas.addEventListener("pointerup", (e) => {
+    e.preventDefault();
+
     mouseDown = false;
 
     if (simMode == 0) {
@@ -794,15 +799,7 @@ canvas.addEventListener("pointerup", (e) => {
     }
 
 
-});
-
-function getMousePos(event: MouseEvent): { x: number, y: number } {
-    const rect = canvas.getBoundingClientRect(); // Get the canvas's bounding box
-    return {
-        x: event.clientX - rect.left, // Mouse X relative to the canvas
-        y: event.clientY - rect.top  // Mouse Y relative to the canvas
-    };
-}
+}, { passive: false });
 
 let offsetX = 8;
 let offsetY = -52;
@@ -821,7 +818,9 @@ function moveMouseImage({ x, y }: { x: number, y: number }): void {
 
 // window mousemove
 window.addEventListener("pointermove", (e) => {
-    let pos = {x: e.clientX, y: e.clientY};
+    e.preventDefault();
+
+    let pos = getPointerPos(e);
     moveMouseImage(pos);
 
 
@@ -829,43 +828,41 @@ window.addEventListener("pointermove", (e) => {
 
     if (simMode == 0) {
         currentLine.addPoint(pos.x, pos.y);
+    } else if (simMode == 1) {
+
+        pmove(pos);
     }
-
-    pmove(pos);
-});
+}, { passive: false });
 
 
-function pmove({x, y} : {x: number, y: number}) {
-    let pos = {x: x, y: y};
+function pmove(pos : {x: number, y: number}) {
 
-    if (simMode == 1) {
-        if (currentAFC) {
-            if (currentMode === "rotate") {
-                const mouseX = pos.x;
-                const mouseY = pos.y;
+    if (currentAFC) {
+        if (currentMode === "rotate") {
+            const mouseX = pos.x;
+            const mouseY = pos.y;
 
-                const dx = mouseX - currentAFC.getCenterPoint().x;
-                const dy = mouseY - currentAFC.getCenterPoint().y;
+            const dx = mouseX - currentAFC.getCenterPoint().x;
+            const dy = mouseY - currentAFC.getCenterPoint().y;
 
-                const angle = Math.atan2(dy, dx);
-                currentAFC.setRad(angle);
+            const angle = Math.atan2(dy, dx);
+            currentAFC.setRad(angle);
 
-            } else if (currentMode === "center") {
-                /*
-                currentAFC.setCenterPoint({ x: pos.x, y: pos.y });
-                */
+        } else if (currentMode === "center") {
+            /*
+            currentAFC.setCenterPoint({ x: pos.x, y: pos.y });
+            */
 
-                if (originalDotCenter && initialMouseCenter) {
-                    // Calculate offset
-                    const offsetX = pos.x - initialMouseCenter.x;
-                    const offsetY = pos.y - initialMouseCenter.y;
+            if (originalDotCenter && initialMouseCenter) {
+                // Calculate offset
+                const offsetX = pos.x - initialMouseCenter.x;
+                const offsetY = pos.y - initialMouseCenter.y;
 
-                    // Apply offset to center position
-                    currentAFC.setCenterPoint({
-                        x: originalDotCenter.x + offsetX,
-                        y: originalDotCenter.y + offsetY,
-                    });
-                }
+                // Apply offset to center position
+                currentAFC.setCenterPoint({
+                    x: originalDotCenter.x + offsetX,
+                    y: originalDotCenter.y + offsetY,
+                });
             }
         }
     }
@@ -1006,19 +1003,4 @@ function drawAfc() {
 
 function addAfc(point: { x: number, y: number }, type: string) {
     afc.push(new AFC(point, type));
-}
-
-
-
-
-function isMobile() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-}
-
-if (isMobile()) {
-canvas.style.touchAction = 'none';
-
-canvas.addEventListener('touchstart', e => e.preventDefault());
-canvas.addEventListener('touchmove', e => e.preventDefault());
-canvas.addEventListener('touchend', e => e.preventDefault());
 }
