@@ -161,7 +161,6 @@ export class Line {
         let L = this.points.length;
         if (L <= 1) return;
 
-
         // For each chunk, draw the filled shape
         for (let i = 0; i < this.upbb.length; i++) {
             const upChunk = this.upbb[i];
@@ -187,8 +186,6 @@ export class Line {
 
             // Down chunk (reverse)
             let haventFoundFirstPoint2 = true;
-
-  
 
             for (let i = downChunk.length - s; i >= 0; i--) { // -1 usual
                 if (haventFoundFirstPoint2) {

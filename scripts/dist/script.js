@@ -45,7 +45,7 @@ function dotsChecker() {
             let dot = new Dot(drip.x, drip.y, drip.radius);
             dots.push(dot);
         }
-        if (dots.length > 500) {
+        if (dots.length > 2000) {
             dots.shift(); // keep the array size manageable
         } // what??  
     }
@@ -348,8 +348,8 @@ document.addEventListener("DOMContentLoaded", () => {
         offsetX = 10;
         offsetY = 10;
         globals.constants.minOffset = 1;
-        globals.constants.maxOffset = 30;
-        globals.constants.scaleFactor = 0.25;
+        globals.constants.maxOffset = 36;
+        globals.constants.scaleFactor = 0.3;
     });
     (_e = document.getElementById("btn-c")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", () => {
         setCursorImg("assets/cursor_icons/gat.png");
